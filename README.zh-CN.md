@@ -1,10 +1,13 @@
-# *Syno*logy Video Info Plugin
+一並參考了
+!https://github.com/alxpnt2/PlexJav18.bundle
 
-[![GitHub Release](https://img.shields.io/github/v/release/C5H12O5/syno-videoinfo-plugin?logo=github&style=flat&color=blue)](https://github.com/C5H12O5/syno-videoinfo-plugin/releases)
-![GitHub Stars](https://img.shields.io/github/stars/C5H12O5/syno-videoinfo-plugin?logo=github&style=flat&color=yellow)
-![GitHub Downloads](https://img.shields.io/github/downloads/C5H12O5/syno-videoinfo-plugin/total?logo=github&style=flat&color=green)
-![Python Support](https://img.shields.io/badge/Python-3.6+-green?logo=python&style=flat&color=steelblue)
-[![GitHub License](https://img.shields.io/github/license/C5H12O5/syno-videoinfo-plugin?logo=apache&style=flat&color=lightslategray)](LICENSE)
+# *Syno*logy Video Info Plugin for av-wiki
+
+不太會寫 python，但是因為 Video Station 需求極大，且參考了 [C5H11](https://github.com/C5H12O5)  以及 [alxpnt2](https://github.com/alxpnt2) 兩位大大成果，使用 LLM 協助改寫了基本適合 av-wiki 的版本，分享一些雷點：
+
+1. 預設日文編碼極易出錯，後來參考 [alxpnt2](https://github.com/alxpnt2) 設定了 Accept-Charset 才成功剖析
+2. 番號規則多變，改寫了 scraper.py 增加正規表達式
+3. 實在還不太會用 _xpath_find，便請 LLM 幫寫了一些很複雜的正規表達式
 
 ###### 📖 [English](README.md) / 📖 简体中文
 

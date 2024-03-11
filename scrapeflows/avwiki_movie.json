@@ -69,8 +69,23 @@
               "source": "subject",
               "into": {
                 "movie": {
-                  "title": "['xp_text', './/div[@class=\"blockquote-like\"]//p']",
-                  "actor": "['xp_texts', './/dl[@class=\"dltable\"]//a']"
+                  "title": "['xp_text', './/div[@class=\"blockquote-like\"]//p', 're_sub', '【(.*?)】(.*?)', '\\\\1\\\\2']",
+                  "actor": "['xp_texts', './/dl[@class=\"dltable\"]//a[@rel=\"tag\"]']"
+                }
+              }
+            }
+          },
+          {
+            "collect": {
+              "source": "subject",
+              "into": {
+                "movie": {
+                  "extra": {
+                    "[plugin_id]": {
+                      "poster": "['re_matches', '<div class=\"article-thumbnail[^>]*>.*?<img[^>]+src=\"([^\"]*)\"']",
+                      "backdrop": "['re_matches', '<div class=\"article-thumbnail[^>]*>.*?<img[^>]+src=\"([^\"]*)\"']"
+                    }
+                  }
                 }
               }
             }

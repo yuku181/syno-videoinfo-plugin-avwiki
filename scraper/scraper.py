@@ -4,6 +4,7 @@ import json
 import logging
 import threading
 import time
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -23,6 +24,24 @@ _flowconf_path = _basedir / "../scrapeflows.conf"
 _maxlimit = 10
 _results: List[Any] = []
 
+def javformat(title) -> str:
+    # 首先，移除所有非英数字符和非连字符，除了空格，以便后续将空格替换为连字符
+    filtered_title = re.sub(r'[^\w\s-]', '', title)
+
+    # 将连续的空格替换为单个空格，以便统一处理
+    filtered_title = re.sub(r'\s+', ' ', filtered_title)
+    
+    # 将空格替换为连字符
+    filtered_title = filtered_title.replace(' ', '-')
+    
+    # 使用正则表达式匹配符合 "英数-数字" 格式的字符串
+    match = re.search(r'[A-Za-z0-9]+-[0-9]+', filtered_title)
+    if match:
+        return match.group()  # 返回匹配到的符合格式的部分
+    else:
+        # 如果没有找到符合格式的部分，返回调整后的字符串或原字符串
+        # 根据实际需求可能返回 None 或其他值
+        return filtered_title  # 或者 return None
 
 def scrape(plugin_id: str) -> str:
     """Scrape video information from given arguments."""
@@ -66,6 +85,10 @@ def scrape(plugin_id: str) -> str:
     start = time.time()
     taskqueue: Dict[int, List[threading.Thread]] = {}
     for flow in ScrapeFlow.load(_flow_path, videotype, language, initialval):
+        # format jav number
+        if flow.site == "av-wiki.net":
+            flow.context["title"]= javformat(initialval["title"])
+
         task = threading.Thread(target=_start, args=(flow, maxlimit))
         tasks = taskqueue.get(flow.priority, [])
         tasks.append(task)
