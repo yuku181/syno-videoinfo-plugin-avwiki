@@ -1,0 +1,87 @@
+{
+  "type": "movie",
+  "site": "av-wiki.net",
+  "steps": [
+    {
+      "doh": {
+        "host": "av-wiki.net"
+      }
+    },
+    {
+      "http": {
+        "url": "https://av-wiki.net/?s={title}&post_type=product",
+        "method": "GET",
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
+          "Accept-Encoding": "none",
+          "Accept-Language": "en-US,en;q=0.8",
+          "Connection": "keep-alive"
+
+        },
+        "result": "metadata"
+      }
+    },
+    {
+      "collect": {
+        "source": "metadata",
+        "into": {
+          "ids": "['re_matches', '&#8220;\\s*(.*?)\\s*&#8221']"
+        }
+      }
+    },
+    {
+      "loop": {
+        "source": "ids",
+        "item": "id",
+        "steps": [
+          {
+            "http": {
+              "url": "https://av-wiki.net/{id}",
+              "method": "GET",
+              "headers": {
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Charset": "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
+                "Accept-Encoding": "none",
+                "Accept-Language": "en-US,en;q=0.8",
+                "Connection": "keep-alive"
+              },
+              "result": "subject"
+            }
+          },
+          {
+            "collect": {
+              "source": "subject",
+              "from": "['xp_text', './/script[@type=\"application/ld+json\"]']",
+              "into": {
+                "movie": {
+                  "summary": "['xp_text', './headline']",
+                  "original_available": "['xp_text', './datePublished']"
+                },
+                "publish_date": "['xp_text', './datePublished']"
+              }
+            }
+          },
+          {
+            "collect": {
+              "source": "subject",
+              "into": {
+                "movie": {
+                  "title": "['xp_text', './/div[@class=\"blockquote-like\"]//p']",
+                  "actor": "['xp_texts', './/dl[@class=\"dltable\"]//a']"
+                }
+              }
+            }
+          },
+          {
+            "retval": {
+              "source": "movie"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
